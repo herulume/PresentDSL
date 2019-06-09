@@ -1,56 +1,76 @@
 %{
+#include <string.h>
+#include <stdio.h>
+
+#include "src/slides/slide.h"
+#include "src/darray/vector.h"
+
 int yylex();
 void yyerror(const char *s);
+
+Slide** v = NULL; /* array of *Slide */
+Slide*  s = NULL; /* tmp *Slide*/
+
+int n_media = 0;
+int n_intro = 0;
+int n_total = 0;
 %}
 %union {
     int i;
     char* s;
+    Media media;
+    char* p;
 }
 %token SUBT VSORC ASORC ISORC
 %token<s> STR
+%token<p> POINT
 %token<i> TIME
+%type<p> Point Points
+%type<media> Video Image Audio Media
 %%
-Presentation: '%' TIME '%' Elements '%'
+
+Presentation: '%' TIME '%' Elements '%' { ; }
             ;
 
-Elements: Element
-        | Elements Element
+Elements: Element { ++n_total; }
+        | Elements Element { ++n_total; }
         ;
 
-Element: '[' STR Media ']' /* filename */
-       | '[' STR Normal ']'
-       | '[' STR Intro ']'
+Element: '[' STR Media ']'  { s = malloc_slide_media(); s->slide.media = $3; s->file = strdup($2); vector_push_back(v, s); s = NULL; ++n_media; }
+       | '[' STR Normal ']' {                                                s->file = strdup($2); vector_push_back(v, s); s = NULL;            }
+       | '[' STR Intro ']'  {                                                s->file = strdup($2); vector_push_back(v, s); s = NULL; ++n_intro; }
        ;
 
-Intro: 'I' STR SUBT STR STR '*' /* title subtitle authors */
-     | 'I' STR STR '*' /* title authors */
-     | 'I' STR SUBT STR '*' /* title subtitle */
+Intro: 'I' STR SUBT STR STR '*' { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.subtitle = strdup($4); s->slide.intro.authors = strdup($5); }
+     | 'I' STR STR '*'          { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.authors = strdup($3);                                       }
+     | 'I' STR SUBT STR '*'     { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.subtitle = strdup($4);                                      }
      ;
 
-Points: Point
-      | Points Point
+Points: Point { asprintf(&$$, "%s\n", $1); }
+      | Points Point { asprintf(&$$, "%s%s\n", $1, $2); }
       ;
 
-Point: '~' STR
+Point: '~' POINT { $$ = $2; }
      ;
 
-Media: 'M' Video '>'
-     | 'M' Audio '>'
-     | 'M' Image '>'
+Media: 'M' Video '>' { $$ = $2; }
+     | 'M' Audio '>' { $$ = $2; }
+     | 'M' Image '>' { $$ = $2; }
      ;
 
-Video: '(' VSORC STR ')'
+Video: '(' VSORC STR ')' { $$ = (Media){ .type = Video, .src = strdup($3) }; }
      ;
 
-Audio: '(' ASORC STR ')'
+Audio: '(' ASORC STR ')' { $$ = (Media){ .type = Audio, .src = strdup($3) }; }
      ;
 
-Image: '(' ISORC STR ')'
+Image: '(' ISORC STR ')' { $$ = (Media){ .type = Image, .src = strdup($3) }; }
      ;
 
-Normal: 'N' STR '>' /* title */
-      | 'N' STR Media '>'
-      | 'N' STR Points '>'
+Normal: 'N' STR STR '>'    { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Text_T; s->slide.normal.content.text = strdup($3); }
+      | 'N' STR Media '>'  { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Media_T; s->slide.normal.content.media = $3;       }
+      | 'N' STR Points '>' { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Points_T; s->slide.normal.content.points = strdup($3); }
+
 %%
 
 #include "lex.yy.c"

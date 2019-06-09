@@ -17,6 +17,11 @@ ISORC { return ISORC; }
     return STR;
 }
 
+[A-Z][a-z ]+; {
+    yylval.p = strdup(yytext);
+    return POINT;
+}
+
 [0-9]+ {
     yylval.i = atof(yytext);
     return TIME;

@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Wextra -O2 -march=native
+CFLAGS = -Wall -Wextra -O2 -march=native -D_GNU_SOURCE
 CC     = gcc
 
 
