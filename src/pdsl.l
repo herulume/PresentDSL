@@ -1,22 +1,16 @@
 %option noyywrap
+%option noinput nounput
+%{
+#include "y.tab.h"
+%}
 
 %%
-";" return ";";
-"(" return "(";
-")" return ")";
-"%" return "%";
-"~" return "~";
+[>*()%~IMN\[\]] { return yytext[0]; }
 
-BGI return BGI;
-SUBT return SUBT;
-VSORC return VSORC;
-ASORC return ASORC;
-ISORC return ISORC;
-
-(red|blue|white) {
-    yyval.colour = strdup(yytext);
-    return BGCOLOUR;
-}
+SUBT  { return SUBT; }
+VSORC { return VSORC; }
+ASORC { return ASORC; }
+ISORC { return ISORC; }
 
 \'[^']*\' {
     yylval.s = strdup(yytext);
