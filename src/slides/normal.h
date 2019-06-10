@@ -67,7 +67,7 @@ char* normal_points_html(Normal n) {
     }
 
     while (token) {
-        html = concat(4, html0,"<li>", token, "</li>\n");
+        html = concat(4, html0,"<li style=\"font-size: 30px \">", token, "</li>\n");
         free(html0);
         asprintf(&html0, "%s", html);
         token = strtok_r(rest, "\n", &rest);

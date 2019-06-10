@@ -5,7 +5,7 @@
 [ 'pag1.html'  N 'Isto é um título' 'Isto é texto
 com
 parágrafos e
-<p> em cada um.' ]
+HTML p tag em cada um.' ]
 [ 'pag2.html'  N 'Podemos enumerar' ~ Muitas; ~ Coisas; ~ Nesta!; ~ Lista ?; ]
 [ 'intro3.html' I 'Exemplo de áudio' ]
 [ 'audioet.html' N 'Áudio com um título' M ( ASORC 'nightwish.mp3' ) ]
