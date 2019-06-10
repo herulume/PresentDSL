@@ -25,7 +25,14 @@ char* intro_html(Intro i) {
     char* html1;
     char* html2;
 
-    asprintf(&html0, "<div align=\"center\"><hr/><h1>%s</h1></div><hr/>\n", clean(i.title));
+    if(!i.authors && !i.subtitle) {
+        asprintf(&html0, "<div align=\"center\" style=\"position:absolute;top:50%%;left:50%%;margin-right:-50%%;transform:translate(-50%%,-50%%) \" ><h1>%s</h1><hr/></div>\n", clean(i.title));
+        html = concat(1, html0);
+        free(html0);
+        return html;
+    } else {
+        asprintf(&html0, "<div align=\"center\"><hr/><h1>%s</h1></div><hr/>\n", clean(i.title));
+    }
 
     if(i.subtitle && !i.authors) {
         asprintf(&html1, "<div align=\"center\" style=\"position:absolute;top:50%%;left:50%%;margin-right:-50%%;transform:translate(-50%%,-50%%) \" ><h2>%s</h2></div>", clean(i.subtitle));
@@ -48,11 +55,6 @@ char* intro_html(Intro i) {
         free(html0);
         free(html1);
         free(html2);
-    }
-
-    if(!i.authors && !i.subtitle) {
-        html = concat(1, html0);
-        free(html0);
     }
 
     return html;
