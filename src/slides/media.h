@@ -25,13 +25,13 @@ char* image_html(Media m) {
 
 char* audio_html(Media m) {
     char* html;
-    asprintf(&html, "<audio controls src=\"%s\" />", clean(m.src));
+    asprintf(&html, "<div align=\"center\" style=\"position:absolute;top:50%%;left:50%%;margin-right:-50%%;transform:translate(-50%%,-50%%) \"><audio controls src=\"%s\" /></div>", clean(m.src));
     return html;
 }
 
 char* video_html(Media m) {
     char* html;
-    asprintf(&html, "<video width=\"500\" height=\"500\" src=\"%s\" controls />", clean(m.src));
+    asprintf(&html, "<div align=\"center\" style=\"position:absolute;top:50%%;left:50%%;margin-right:-50%%;transform:translate(-50%%,-50%%) \"><video width=\"500\" height=\"500\" src=\"%s\" controls /></div>", clean(m.src));
     return html;
 }
 

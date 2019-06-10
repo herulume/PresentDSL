@@ -28,22 +28,22 @@ char* intro_html(Intro i) {
     asprintf(&html0, "<div align=\"center\"><hr/><h1>%s</h1></div><hr/>\n", clean(i.title));
 
     if(i.subtitle && !i.authors) {
-        asprintf(&html1, "<div align=\"center\"><h2>%s</h2></div>", clean(i.subtitle));
+        asprintf(&html1, "<div align=\"center\" style=\"position:absolute;top:50%%;left:50%%;margin-right:-50%%;transform:translate(-50%%,-50%%) \" ><h2>%s</h2></div>", clean(i.subtitle));
         html = concat(2, html0, html1);
         free(html0);
         free(html1);
     }
 
     if(i.authors && !i.subtitle) {
-        asprintf(&html2, "<div align=\"left\"><h4>%s</h4></div>", clean(i.authors));
+        asprintf(&html2, "<div align=\"left\" style=\"position:absolute; bottom:0; width:100%% height:60px; \"><h4>%s</h4></div>", clean(i.authors));
         html = concat(2, html0, html2);
         free(html0);
         free(html2);
     }
 
     if(i.authors && i.subtitle) {
-        asprintf(&html1, "<div align=\"center\"><h2>%s</h2></div>", clean(i.subtitle));
-        asprintf(&html2, "<div align=\"left\"><h4>%s</h4></div>", clean(i.authors));
+        asprintf(&html1, "<div align=\"center\" style=\"position:absolute;top:50%%;left:50%%;margin-right:-50%%;transform:translate(-50%%,-50%%) \" ><h2>%s</h2></div>", clean(i.subtitle));
+        asprintf(&html2, "<div align=\"left\" style=\"position:absolute; bottom:0; width:100%% height:60px; \"><h4>%s</h4></div>", clean(i.authors));
         html = concat(3, html0, html1, html2);
         free(html0);
         free(html1);
