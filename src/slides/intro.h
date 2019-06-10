@@ -39,6 +39,7 @@ char* intro_html(Intro i) {
         html = concat(2, html0, html1);
         free(html0);
         free(html1);
+        return html;
     }
 
     if(i.authors && !i.subtitle) {
@@ -46,6 +47,7 @@ char* intro_html(Intro i) {
         html = concat(2, html0, html2);
         free(html0);
         free(html2);
+        return html;
     }
 
     if(i.authors && i.subtitle) {
@@ -55,8 +57,8 @@ char* intro_html(Intro i) {
         free(html0);
         free(html1);
         free(html2);
+        return html;
     }
-
-    return html;
+    return NULL;
 }
 #endif
