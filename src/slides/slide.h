@@ -61,7 +61,7 @@ void slide_html(Slide* s, int time, char* next) {
     char time_s[12];
     sprintf(time_s, "%d", time);
     char* html;
-    char* pre_time = "<html>\n<head>\n<meta charset=\"UTF-8\"/>\n<meta http-equiv=\"REFRESH\" content=\"";
+    char* pre_time = "<!DOCTYPE html><html>\n<head>\n<meta charset=\"UTF-8\"/>\n<meta http-equiv=\"REFRESH\" content=\"";
     char* after_time = " ;URL=";
     char* after_next = " \">\n</head>\n<body>\n";
     char* end = "\n</body>\n</html>\n";
