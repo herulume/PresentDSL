@@ -1,7 +1,7 @@
 %{
 #include <string.h>
 #include <stdio.h>
-
+#include "src/utils/colours.h"
 #include "src/slides/slide.h"
 #include "src/darray/vector.h"
 
@@ -13,7 +13,7 @@ Slide*  s = NULL; /* tmp *Slide*/
 
 int n_media = 0;
 int n_intro = 0;
-int n_total = 0;
+int n_normal = 0;
 %}
 %union {
     int i;
@@ -41,19 +41,19 @@ Presentation: '%' TIME '%' Elements '%' { if(v) {
                                         }
             ;
 
-Elements: Element { ++n_total; }
-        | Elements Element { ++n_total; }
+Elements: Element
+        | Elements Element
         ;
 
 Element: '[' STR Media ']'  { s = malloc_slide_media(); s->slide.media = $3; s->file = strdup($2); vector_push_back(v, s); s = NULL; ++n_media; }
-       | '[' STR Normal ']' { s->file = strdup($2); vector_push_back(v, s); s = NULL; }
+       | '[' STR Normal ']' { s->file = strdup($2); vector_push_back(v, s); s = NULL; ++n_normal; }
        | '[' STR Intro ']'  { s->file = strdup($2); vector_push_back(v, s); s = NULL; ++n_intro; }
        ;
 
-Intro: 'I' STR SUBT STR STR '*' { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.subtitle = strdup($4); s->slide.intro.authors = strdup($5); }
-     | 'I' STR STR '*'          { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.authors = strdup($3); }
-     | 'I' STR SUBT STR '*'     { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.subtitle = strdup($4); }
-     | 'I' STR '*'              { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); }
+Intro: 'I' STR SUBT STR STR { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.subtitle = strdup($4); s->slide.intro.authors = strdup($5); }
+     | 'I' STR STR           { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.authors = strdup($3); }
+     | 'I' STR SUBT STR      { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); s->slide.intro.subtitle = strdup($4); }
+     | 'I' STR               { s = malloc_slide_intro(); s->slide.intro.title = strdup($2); }
      ;
 
 Points: Point { asprintf(&$$, "%s\n", $1); }
@@ -63,9 +63,9 @@ Points: Point { asprintf(&$$, "%s\n", $1); }
 Point: '~' POINT { $$ = $2; }
      ;
 
-Media: 'M' Video '>' { $$ = $2; }
-     | 'M' Audio '>' { $$ = $2; }
-     | 'M' Image '>' { $$ = $2; }
+Media: 'M' Video  { $$ = $2; }
+     | 'M' Audio  { $$ = $2; }
+     | 'M' Image  { $$ = $2; }
      ;
 
 Video: '(' VSORC STR ')' { $$ = (Media){ .type = Video, .src = strdup($3) }; }
@@ -77,19 +77,28 @@ Audio: '(' ASORC STR ')' { $$ = (Media){ .type = Audio, .src = strdup($3) }; }
 Image: '(' ISORC STR ')' { $$ = (Media){ .type = Image, .src = strdup($3) }; }
      ;
 
-Normal: 'N' STR STR '>'    { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Text_T; s->slide.normal.content.text = strdup($3); }
-      | 'N' STR Media '>'  { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Media_T; s->slide.normal.content.media = $3;       }
-      | 'N' STR Points '>' { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Points_T; s->slide.normal.content.points = strdup($3); }
+Normal: 'N' STR STR     { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Text_T; s->slide.normal.content.text = strdup($3); }
+      | 'N' STR Media   { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Media_T; s->slide.normal.content.media = $3;       }
+      | 'N' STR Points  { s = malloc_slide_normal(); s->slide.normal.title = strdup($2); s->slide.normal.type = Points_T; s->slide.normal.content.points = strdup($3); }
 
 %%
 
 #include "lex.yy.c"
 
-void yyerror(const char* s) {
-    printf("%s", s);
+void yyerror(const char* s){
+    fprintf(stderr, "%s, '%s', line %d \n", s, yytext, yylineno);
 }
 
 int main() {
-    yyparse();
+    int errors;
+    errors = yyparse();
+    printf("%sParsing...%s\n", YEA, NCO);
+    if (errors == 0) {
+        printf("%sPresentation created! %s\n", YEA, NCO);
+        printf("%s\t[*]%s Number of subtopics: %s %d %s\n", RED, GRA, GRE, n_intro-1, NCO);
+        printf("%s\t[*]%s Number of slides with information: %s %d %s\n", RED, GRA, GRE, n_normal, NCO);
+        printf("%s\t[*]%s Number of slides with media only:  %s %d %s\n", RED, GRA, GRE, n_media, NCO);
+        printf("%s\t[*]%s Total number of slides: %s %d %s\n", RED, GRA, GRE, n_intro + n_media + n_normal , NCO);
+    }
     return 0;
 }

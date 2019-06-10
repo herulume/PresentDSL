@@ -1,0 +1,19 @@
+%
+10
+%
+[ 'intro.html' I 'Eu vi....' SUBT '...mas nao exploitei' 'Eduardo Jorge' ]
+[ 'pag1.html'  N 'First...' 'we drink all the boose
+then hack all the things!' ]
+[ 'pag2.html'  N 'THEN' ~ Backdoor; ~ Every; ~ Single; ~ Thing !; ]
+[ 'intro2.html' I 'Algumas imagems...' SUBT 'e videos! E SOM!' ]
+[ 'intro3.html' I 'Exemplo de audio' ]
+[ 'audioet.html' N 'Audio com contexto' M ( ASORC 'nightwish.mp3' ) ]
+[ 'audio.html' M ( ASORC 'nightwish.mp3' ) ]
+[ 'intro4.html' I 'Exemplo de video' ]
+[ 'videoet.html' N 'Video com contexto' M ( VSORC 'nightwish.mp4' ) ]
+[ 'video.html' M ( VSORC 'nightwish.mp4' ) ]
+[ 'intro5.html' I 'Exemplo de imagem' ]
+[ 'imagemet.html' N 'Harry Potter + Haskell =' M ( ISORC 'foldemort.png' ) ]
+[ 'imagem.html' M ( ISORC 'foldemort.png' ) ]
+[ 'outro.html' I 'Muito obrigado' ]
+%

@@ -30,7 +30,7 @@ char* normal_text_html(Normal n) {
     char* token;
     char* rest = clean(n.content.text);
     char* html0;
-    asprintf(&html0, "%s", "<div align=\"center\"><p>\n");
+    asprintf(&html0, "%s", "<div align=\"center\"><h3><p>\n");
 
     token = strtok_r(rest, "\n", &rest);
     if(!token) {
@@ -47,7 +47,7 @@ char* normal_text_html(Normal n) {
         if(token) asprintf(&html0, "%s</p>\n<p>", html);
         else asprintf(&html0, "%s</p>\n", html);
     }
-    asprintf(&html, "%s</div>", html0);
+    asprintf(&html, "%s</h3></div>", html0);
     free(html0);
 
     return html;
@@ -56,13 +56,13 @@ char* normal_text_html(Normal n) {
 char* normal_points_html(Normal n) {
     char* html;
     char* token;
-    char* rest = clean(n.content.points);
+    char* rest = n.content.points;
     char* html0;
-    asprintf(&html0, "%s", "<div align=\"center\"><ul>\n");
+    asprintf(&html0, "%s", "<div align=\"center\"><h3><ul>\n");
 
     token = strtok_r(rest, "\n", &rest);
     if(!token) {
-        html = concat(3, html0, clean(n.content.points), "</ul></div>");
+        html = concat(3, html0, n.content.points, "</ul></div>");
         free(html0);
         return html;
     }
@@ -73,7 +73,7 @@ char* normal_points_html(Normal n) {
         asprintf(&html0, "%s", html);
         token = strtok_r(rest, "\n", &rest);
     }
-    asprintf(&html, "%s</div>", html0);
+    asprintf(&html, "%s</h3></div>", html0);
     free(html0);
 
     return html;
@@ -85,10 +85,10 @@ char* normal_html(Normal n) {
     char* html;
 
 
-    asprintf(&html1, "<div align=\"center\"><left>%s</h1><div><hr/>\n", clean(n.title));
+    asprintf(&html1, "<div align=\"center\"><h1>%s</h1><div><hr/>\n", clean(n.title));
 
     if(n.type == Text_T) html0 = normal_text_html(n);
-    if(n.type == Media_T) html0 = media_html(n.content.media);
+    else if(n.type == Media_T) html0 = media_html(n.content.media);
     else html0 = normal_points_html(n);
 
     html = concat(2, html1, html0);

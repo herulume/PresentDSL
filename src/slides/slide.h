@@ -68,7 +68,7 @@ void slide_html(Slide* s, int time, char* next) {
     char* body;
 
     if(s->type == Media_S)  body = media_html(s->slide.media);
-    if(s->type == Normal_S) body = normal_html(s->slide.normal);
+    else if(s->type == Normal_S) body = normal_html(s->slide.normal);
     else body = intro_html(s->slide.intro);
 
     html = concat(7, pre_time, time_s, after_time, next, after_next, body, end);
@@ -90,7 +90,7 @@ void slide_end_html(Slide* s, int time) {
     char* body;
 
     if(s->type == Media_S)  body = media_html(s->slide.media);
-    if(s->type == Normal_S) body = normal_html(s->slide.normal);
+    else if(s->type == Normal_S) body = normal_html(s->slide.normal);
     else body = intro_html(s->slide.intro);
 
     html = concat(4, pre_time, after_next, body, end);

@@ -1,11 +1,11 @@
-%option noyywrap
+%option noyywrap yylineno
 %option noinput nounput
 %{
 #include "y.tab.h"
 %}
 
 %%
-[>*()%~IMN\[\]] { return yytext[0]; }
+[()%~IMN\[\]] { return yytext[0]; }
 
 SUBT  { return SUBT; }
 VSORC { return VSORC; }
@@ -17,7 +17,7 @@ ISORC { return ISORC; }
     return STR;
 }
 
-[A-Z][a-z ]+; {
+[A-Z][a-z ?!]+; {
     yylval.p = strdup(yytext);
     return POINT;
 }
