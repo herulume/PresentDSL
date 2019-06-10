@@ -20,6 +20,19 @@ clean:
 	@echo "Cleaning..."
 	@echo ""
 	@cat .art/maid.ascii
-	@rm -rf bin
+	@rm -rf bin || true
 	@echo ""
 	@echo "...all done!"
+
+install: man/slides.l
+	@cp bin/slides /usr/bin
+	@cp bin/slides /usr/local/bin
+	@cp man/slides.l a.l
+	@gzip a.l
+	@mandb
+	@rm a.l.gz
+
+remove:
+	@rm /usr/bin/slides
+	@rm /usr/local/bin/slides
+	@rm /usr/share/man/man1/slides.1.gz
