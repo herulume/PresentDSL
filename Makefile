@@ -29,6 +29,7 @@ install: man/slides.l
 	@cp bin/slides /usr/local/bin
 	@cp man/slides.l a.l
 	@gzip a.l
+	@cp a.l.gz /usr/share/man/man1/slides.1.gz
 	@mandb
 	@rm a.l.gz
 
